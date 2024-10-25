@@ -1,0 +1,37 @@
+services:
+  darthvader:
+    build: darthvader
+    hostname: darthvader
+    networks:
+      redednss:
+          ipv4_address: 192.168.20.10
+    volumes:
+     # - ./darthvader/conf/named.conf.options:/etc/bind/named.conf.options
+      - ./darthvader/conf/db.starwars.lan:/etc/bind/db.starwars.lan
+      - ./darthvader/conf/db.20.168.192:/etc/bind/db.20.168.192
+      - ./darthvader/conf/named.conf.local:/etc/bind/named.conf.local
+
+  leia:
+    build: leia
+    hostname: leia
+    networks:
+      redednss:
+          ipv4_address: 192.168.20.12
+    volumes:
+       - ./leia/conf/named.conf.local:/etc/bind/named.conf.local
+       - ./leia/conf/db.imperio.starwars.lan:/etc/bind/db.imperio.starwars.lan
+  eq1:
+    build: debian
+    hostname: eq1
+    dns:
+      - 192.168.20.10
+      - 192.168.20.11
+    networks:
+      redednss:
+          ipv4_address: 192.168.20.100
+networks:
+  redednss:
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24
+
